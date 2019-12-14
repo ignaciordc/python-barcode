@@ -75,9 +75,12 @@ class BaseWriter(object):
             output.
             Is called: `return callback_finish()` and must return the
             rendered output.
+        font_size : integer
+            font size for the text, in points, defaults to 10,
+            to maintain backwards compatibility
     """
     def __init__(
-        self, initialize=None, paint_module=None, paint_text=None, finish=None
+        self, initialize=None, paint_module=None, paint_text=None, finish=None, font_size=10
     ):
         self._callbacks = {
             'initialize': initialize,
@@ -87,7 +90,7 @@ class BaseWriter(object):
         }
         self.module_width = 10
         self.module_height = 10
-        self.font_size = 10
+        self.font_size = font_size
         self.quiet_zone = 6.5
         self.background = 'white'
         self.foreground = 'black'
@@ -328,13 +331,17 @@ if Image is None:
 else:
 
     class ImageWriter(BaseWriter):
-        def __init__(self):
+        def __init__(self, format='PNG', dpi=300):
             BaseWriter.__init__(
                 self, self._init, self._paint_module, self._paint_text,
                 self._finish
             )
             self.format = 'PNG'
-            self.dpi = 300
+            if format.upper() in ['BMP', 'EPS', 'GIF', 'JPEG', 'PCX',
+                'PDF', 'PNG', 'PPM', 'TIF', 'TIFF']:
+                self.format = format
+            self.dpi = min(dpi, 1600)               #limit its dpi
+            self.font_size = int(round(10*self.dpi/300.))
             self._image = None
             self._draw = None
 
