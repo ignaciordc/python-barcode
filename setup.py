@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from setuptools import find_packages, setup
 
 setup(
@@ -13,7 +11,7 @@ setup(
         'Create standard barcodes with Python. No external modules needed. '
         '(optional Pillow support included).'
     ),
-    long_description=Path('README.rst').read_text(),
+    long_description=read('README.rst'),
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Console',
