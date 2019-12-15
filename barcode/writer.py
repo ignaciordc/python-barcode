@@ -26,6 +26,11 @@ def pt2mm(pt):
     return pt * 0.352777778
 
 
+def pt2pxl(pt, dpi=300):
+    """Convert from points to pixels at 1600dpi. IRC"""
+    return int(mm2px(pt2mm(pt),dpi))
+
+
 def _set_attributes(element, **attributes):
     for key, value in attributes.items():
         element.setAttribute(key, value)
@@ -360,7 +365,7 @@ else:
 
         def _paint_text(self, xpos, ypos):
             for subtext in self.text.split('\n'):
-                font = ImageFont.truetype(FONT, self.font_size * 2)
+                font = ImageFont.truetype(FONT, pt2pxl(self.font_size, self.dpi))
                 width, height = font.getsize(subtext)
                 # determine the maximum width of each line
                 pos = (
